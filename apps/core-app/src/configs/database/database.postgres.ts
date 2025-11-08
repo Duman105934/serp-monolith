@@ -33,10 +33,7 @@ export class PostgresDatabase {
 
   private static loadEntities(): any[] {
     const rootPath = join(__dirname, '../../');
-
-    console.log('Root path: ', rootPath);
     const entities: any[] = [];
-
     const traverseDir = (dir: string) => {
       const files = readdirSync(dir);
 
@@ -55,7 +52,6 @@ export class PostgresDatabase {
       });
     };
     traverseDir(rootPath);
-
     console.log('Loaded Entities: ', entities);
     return entities;
   }

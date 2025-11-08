@@ -1,11 +1,21 @@
+import 'dotenv/config';
 import { Module } from '@nestjs/common';
-import { CoreAppController } from './core-app.controller';
-import { CoreAppService } from './core-app.service';
 import { DatabaseModule } from './configs';
+import { ConfigModule } from '@nestjs/config';
+import { join } from 'path';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [CoreAppController],
-  providers: [CoreAppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        join(__dirname, '../.env'),
+        join(process.cwd(), 'apps/core-app/.env'),
+      ],
+    }),
+    DatabaseModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class CoreAppModule {}
