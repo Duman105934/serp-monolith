@@ -1,16 +1,17 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseFactory } from './database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppConfigModule } from '../config/app-config.module';
+import { AppConfigService } from '../config/app-config.service';
 
 @Global()
 @Module({
   imports: [
-    ConfigModule,
+    AppConfigModule,
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      imports: [AppConfigModule],
+      inject: [AppConfigService],
+      useFactory: (configService: AppConfigService) => {
         if (!configService) throw new Error('No database configs');
         return DatabaseFactory.createDatabaseConnection(configService);
       },

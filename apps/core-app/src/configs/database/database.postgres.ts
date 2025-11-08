@@ -1,71 +1,17 @@
-import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { join } from 'path';
-import { readdirSync, statSync } from 'fs';
+import { AppConfigService } from '../config/app-config.service';
 
 export class PostgresDatabase {
-  constructor(private readonly configService: ConfigService) {}
-
-  private static loadEntitiesFromDirectory(directoryPath: string): any[] {
-    let entities: any[] = [];
-
-    try {
-      const files = readdirSync(directoryPath);
-      files.forEach((file) => {
-        const fullPath = join(directoryPath, file);
-        const fileStat = statSync(fullPath);
-
-        if (fileStat.isDirectory()) {
-          entities = [...entities, ...this.loadEntitiesFromDirectory(fullPath)];
-        } else if (
-          file.endsWith('.typeorm.entity.ts') ||
-          file.endsWith('.typeorm.entity.js')
-        ) {
-          entities.push(require(fullPath).default);
-        }
-      });
-    } catch (error) {
-      console.error(`Error reading directory ${directoryPath}: `, error);
-    }
-
-    return entities;
-  }
-
-  private static loadEntities(): any[] {
-    const rootPath = join(__dirname, '../../');
-    const entities: any[] = [];
-    const traverseDir = (dir: string) => {
-      const files = readdirSync(dir);
-
-      files.forEach((file) => {
-        const fullPath = join(dir, file);
-        const fileStat = statSync(fullPath);
-
-        if (fileStat.isDirectory()) {
-          if (file.toLowerCase() === 'entities') {
-            const entityFiles = this.loadEntitiesFromDirectory(fullPath);
-            entities.push(...entityFiles);
-          } else {
-            traverseDir(fullPath); // If it's not an entities folder, continue recursion
-          }
-        }
-      });
-    };
-    traverseDir(rootPath);
-    console.log('Loaded Entities: ', entities);
-    return entities;
-  }
+  constructor(private readonly configService: AppConfigService) {}
 
   getConnection(): TypeOrmModuleOptions {
-    const entities = PostgresDatabase.loadEntities();
     return {
-      type: 'postgres',
-      host: this.configService.get<string>('DB_HOST', 'localhost'),
-      port: this.configService.get<number>('DB_PORT', 5432),
-      username: this.configService.get<string>('DB_USERNAME', 'user'),
-      password: this.configService.get<string>('DB_PASSWORD', 'password'),
-      database: this.configService.get<string>('DB_NAME', 'my_database'),
-      entities,
+      type: this.configService.get().database.type,
+      host: this.configService.get().database.host,
+      port: this.configService.get().database.port,
+      username: this.configService.get().database.username,
+      password: this.configService.get().database.password,
+      database: this.configService.get().database.database,
       synchronize: false, // в PROD среде всегда false
       autoLoadEntities: true,
       logging: false,

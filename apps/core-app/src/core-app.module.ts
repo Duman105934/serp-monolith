@@ -1,20 +1,10 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from './configs';
-import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
+import { AppConfigModule } from './configs';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: [
-        join(__dirname, '../.env'),
-        join(process.cwd(), 'apps/core-app/.env'),
-      ],
-    }),
-    DatabaseModule,
-  ],
+  imports: [DatabaseModule, AppConfigModule],
   controllers: [],
   providers: [],
 })
