@@ -1,10 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/serp-monolith/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true
+    "webpack": true,
+    "tsConfigPath": "apps/serp-monolith/tsconfig.app.json"
   },
   "projects": {
     "configs": {
@@ -15,6 +16,26 @@
       "compilerOptions": {
         "tsConfigPath": "libs/configs/tsconfig.lib.json"
       }
+    },
+    "core-app": {
+      "type": "application",
+      "root": "apps/core-app",
+      "entryFile": "main",
+      "sourceRoot": "apps/core-app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/core-app/tsconfig.app.json"
+      }
+    },
+    "serp-monolith": {
+      "type": "application",
+      "root": "apps/serp-monolith",
+      "entryFile": "main",
+      "sourceRoot": "apps/serp-monolith/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/serp-monolith/tsconfig.app.json"
+      }
     }
-  }
+  },
+  "monorepo": true,
+  "root": "apps/serp-monolith"
 }
