@@ -1,21 +1,24 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './configs';
-import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
+import { AuthGuard } from '@app/common';
+import { AppConfigModule, DatabaseModule } from '@app/configs';
+import { UserModule } from '../../../modules/users/src/user.module';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { AuthModule } from '../../../modules/auth/auth.module';
+import { HttpExceptionFilter } from '@app/common/exceptions/http-exception.filter';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: [
-        join(__dirname, '../.env'),
-        join(process.cwd(), 'apps/core-app/.env'),
-      ],
-    }),
-    DatabaseModule,
-  ],
+  imports: [DatabaseModule, AppConfigModule, UserModule, AuthModule],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class CoreAppModule {}
