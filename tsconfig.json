@@ -22,18 +22,13 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/configs": [
-        "libs/configs/src"
-      ],
-      "@app/configs/*": [
-        "libs/configs/src/*"
-      ],
-      "@app/contracts": [
-        "libs/contracts/src"
-      ],
-      "@app/contracts/*": [
-        "libs/contracts/src/*"
-      ]
+      "@app/common": ["libs/common/src"],
+      "@app/common/*": ["libs/common/src/*"],
+      "@app/configs": ["libs/configs/src"],
+      "@app/configs/*": ["libs/configs/src/*"],
+      "@app/contracts": ["libs/contracts/src"],
+      "@app/contracts/*": ["libs/contracts/src/*"],
+      "@core-app/configs": ["apps/core-app/src/configs/index.ts"]
     }
   }
 }
