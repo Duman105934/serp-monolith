@@ -1,16 +1,15 @@
-
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('user')
+@Entity({ schema: 'users', name: 'users' })
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid', { default: () => 'gen_random_uuid()' })
   public id!: string;
 
   @Column({ type: 'varchar', length: 255, select: true, unique: true })
